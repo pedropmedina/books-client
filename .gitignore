@@ -1,0 +1,15 @@
+# Logs
+logs
+*.logs
+*.log
+*yarn.error.logs
+*yarn.debug.logs
+
+# Dependencies
+node_modules
+
+# Environment Variables
+.env
+
+# Webpack build
+build

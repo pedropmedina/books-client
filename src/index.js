@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
-import Signin from './components/Signin';
+import SignIn from './components/SignIn';
 
 const client = new ApolloClient({
 	uri: 'http://localhost:5000/graphql',
@@ -11,7 +11,7 @@ const client = new ApolloClient({
 
 const App = () => (
 	<ApolloProvider client={client}>
-		<Signin />
+		<SignIn />
 	</ApolloProvider>
 );
 

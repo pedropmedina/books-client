@@ -4,12 +4,16 @@ import gql from 'graphql-tag';
 
 // Graphql queries
 const SIGNIN_USER = gql`
-	mutation CreateSignIn($idToken: String) {
-		signin(idToken: $idToken)
+	mutation CreateSignIn($input: SignInInput!) {
+		signIn(input: $input) {
+			id
+			name
+			email
+		}
 	}
 `;
 
-class Signin extends Component {
+class SignIn extends Component {
 	componentDidMount() {
 		this.handleOAuth2ClientLoad();
 	}
@@ -21,35 +25,16 @@ class Signin extends Component {
 	init = () => {
 		window.gapi.auth2
 			.init({
-				clientId:
+				client_id:
 					'579012218555-5b5eq8atbcbkv7h6q8fafqj86od1ot5m.apps.googleusercontent.com',
 				redirect_uri: 'http://localhost:4000/signin',
-				scopes: [
+				scope: [
 					'https://www.googleapis.com/auth/userinfo.profile',
 					'https://www.googleapis.com/auth/userinfo.email',
-				],
+					'https://www.googleapis.com/auth/books',
+				].join(' '),
 			})
 			.then(() => {
-				/*
-				const instance = window.gapi.auth2.getAuthInstance();
-				// console.log(a);
-				const user = instance.currentUser.get();
-				// console.log(u);
-				const profile = user.getBasicProfile();
-				// console.log(profile);
-				const extractProfile = {
-					id: profile.getId(),
-					name: profile.getName(),
-					givenName: profile.getGivenName(),
-					email: profile.getEmail(),
-				};
-				// console.log(extractProfile);
-				const authRes = user.getAuthResponse({
-					includeAuthorizationData: true,
-				});
-				console.log(authRes);
-				*/
-
 				window.gapi.auth2
 					.getAuthInstance()
 					.isSignedIn.listen(this.updateSigninStatus);
@@ -68,8 +53,8 @@ class Signin extends Component {
 		}
 	};
 
-	handleSignIn = signInMutation => {
-		window.gapi.auth2.getAuthInstance().signIn();
+	handleSignIn = async signInMutation => {
+		await window.gapi.auth2.getAuthInstance().signIn();
 
 		const instance = window.gapi.auth2.getAuthInstance();
 		const user = instance.currentUser.get();
@@ -86,7 +71,11 @@ class Signin extends Component {
 
 		console.log(authRes);
 
-		signInMutation({ variables: { idToken: authRes.id_token } });
+		signInMutation({
+			variables: {
+				input: { idToken: authRes.id_token, accessToken: authRes.access_token },
+			},
+		});
 	};
 
 	handleSignOut = () => {
@@ -112,4 +101,4 @@ class Signin extends Component {
 	}
 }
 
-export default Signin;
+export default SignIn;

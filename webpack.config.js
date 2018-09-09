@@ -9,7 +9,8 @@ const modeConfig = env => require(`./build-utils/webpack.${env.mode}`)(env);
 module.exports = ({ mode, presets } = { mode: 'production', presets: [] }) =>
 	merge(
 		{
-			entry: ['./src/index'],
+			mode,
+			entry: ['@babel/polyfill', './src/index'],
 			output: {
 				filename: 'bundle.js',
 				path: path.resolve(__dirname, 'build'),
@@ -19,10 +20,7 @@ module.exports = ({ mode, presets } = { mode: 'production', presets: [] }) =>
 				rules: [
 					{
 						test: /\.(js|jsx)$/,
-						use: {
-							loader: 'babel-loader',
-							options: { presets: ['@babel/preset-env'] },
-						},
+						use: { loader: 'babel-loader' },
 						include: path.resolve(__dirname, 'src'),
 					},
 				],

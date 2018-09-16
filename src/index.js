@@ -7,6 +7,12 @@ import SignIn from './components/SignIn';
 
 const client = new ApolloClient({
 	uri: 'http://localhost:5000/graphql',
+	request: operation => {
+		const id_token = localStorage.getItem('authorization');
+		return operation.setContext({
+			headers: { authorization: id_token ? id_token : '' },
+		});
+	},
 });
 
 const App = () => (

@@ -71,6 +71,9 @@ class SignIn extends Component {
 
 		console.log(authRes);
 
+		// save to access_token to setup auth requests
+		localStorage.setItem('authorization', authRes.id_token);
+
 		signInMutation({
 			variables: {
 				input: { idToken: authRes.id_token, accessToken: authRes.access_token },
